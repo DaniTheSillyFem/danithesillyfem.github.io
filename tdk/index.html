@@ -1,346 +1,672 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TouchDirtKernel</title>
-  <meta content="TouchDirt Custom Kernel" property="og:title" />
-  <meta content="Not affiliated with TGK." property="og:description" />
-  <meta content="https://danithesillyfem.github.io/tdk" property="og:url" />
-  <meta content="https://danithesillyfem.github.io/tdk/logo.png" property="og:image" />
-  <meta content="#43B581" data-react-helmet="true" name="theme-color" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-  .animated-bg {
-    position: absolute;
-    width: 200%;
-    height: 200%;
-    top: -50%;
-    left: -50%;
-    background: radial-gradient(circle at 30% 30%, #3e8ef7, transparent 50%),
-                radial-gradient(circle at 70% 70%, #6c5ce7, transparent 50%),
-                radial-gradient(circle at 50% 80%, #9333ea, transparent 50%);
-    animation: moveGradient 15s infinite linear;
-    filter: blur(80px);
-    z-index: 0;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  @keyframes moveGradient {
-    0%   { transform: translate(0, 0) rotate(0deg); }
-    50%  { transform: translate(20%, 20%) rotate(180deg); }
-    100% { transform: translate(0, 0) rotate(360deg); }
-  }
-    body.modal-open {
-      overflow: hidden;
-    }
+    <title>TouchDirt</title>
 
-    /* Liquid glass */
-    .glass {
-      position: relative;
-      background: linear-gradient(155deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03) 60%);
-      backdrop-filter: blur(22px) saturate(160%);
-      -webkit-backdrop-filter: blur(22px) saturate(160%);
-      border: 1px solid rgba(255,255,255,0.14);
-      box-shadow:
-        0 10px 40px -8px rgba(0,0,0,0.55),
-        inset 0 1px 0 rgba(255,255,255,0.22),
-        inset 0 -1px 12px rgba(255,255,255,0.03);
-      overflow: hidden;
-      transition: transform 0.35s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
-    }
-    .glass::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(120% 80% at 15% -10%, rgba(255,255,255,0.16), transparent 55%);
-      pointer-events: none;
-    }
-    .glass:hover {
-      transform: translateY(-3px);
-      border-color: rgba(255,255,255,0.24);
-      box-shadow:
-        0 16px 50px -8px rgba(0,0,0,0.6),
-        inset 0 1px 0 rgba(255,255,255,0.3),
-        inset 0 -1px 12px rgba(255,255,255,0.05);
-    }
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    .glass-modal {
-      position: relative;
-      background: linear-gradient(160deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04) 65%);
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow:
-        0 24px 70px -12px rgba(0,0,0,0.7),
-        inset 0 1px 0 rgba(255,255,255,0.25),
-        inset 0 -1px 16px rgba(255,255,255,0.04);
-      overflow: hidden;
-    }
-    .glass-modal::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(140% 70% at 20% -10%, rgba(255,255,255,0.18), transparent 55%);
-      pointer-events: none;
-    }
+        html {
+            scroll-behavior: smooth;
+        }
 
-    .glass-select {
-      background: rgba(255,255,255,0.06);
-      backdrop-filter: blur(10px) saturate(150%);
-      -webkit-backdrop-filter: blur(10px) saturate(150%);
-      border: 1px solid rgba(255,255,255,0.16);
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
-      transition: border-color 0.25s ease, background 0.25s ease;
-    }
-    .glass-select:focus {
-      outline: none;
-      border-color: rgba(255,255,255,0.4);
-      background: rgba(255,255,255,0.09);
-    }
-    .glass-select option {
-      background-color: #14141c;
-      color: #f3f4f6;
-    }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background: #0d0d0d;
+            color: #f2f2f2;
+            line-height: 1.6;
+        }
 
-    .glass-button {
-      position: relative;
-      background: linear-gradient(155deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
-      backdrop-filter: blur(16px) saturate(160%);
-      -webkit-backdrop-filter: blur(16px) saturate(160%);
-      border: 1px solid rgba(255,255,255,0.28);
-      box-shadow:
-        0 8px 24px -6px rgba(0,0,0,0.5),
-        inset 0 1px 0 rgba(255,255,255,0.35);
-      overflow: hidden;
-      transition: transform 0.3s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease, background 0.3s ease;
-    }
-    .glass-button::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(120% 100% at 30% 0%, rgba(255,255,255,0.25), transparent 60%);
-      pointer-events: none;
-    }
-    .glass-button:hover {
-      transform: translateY(-2px) scale(1.02);
-      background: linear-gradient(155deg, rgba(255,255,255,0.24), rgba(255,255,255,0.08));
-      box-shadow:
-        0 12px 32px -6px rgba(0,0,0,0.55),
-        inset 0 1px 0 rgba(255,255,255,0.45);
-    }
-    .glass-button:active {
-      transform: translateY(0) scale(0.98);
-    }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
 
-    .glass-button-accent {
-      position: relative;
-      background: linear-gradient(155deg, rgba(129,140,248,0.55), rgba(99,102,241,0.35));
-      backdrop-filter: blur(16px) saturate(160%);
-      -webkit-backdrop-filter: blur(16px) saturate(160%);
-      border: 1px solid rgba(199,210,254,0.4);
-      box-shadow:
-        0 10px 28px -6px rgba(79,70,229,0.55),
-        inset 0 1px 0 rgba(255,255,255,0.4);
-      overflow: hidden;
-      display: inline-block;
-      transition: transform 0.3s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease, background 0.3s ease;
-    }
-    .glass-button-accent::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(120% 100% at 30% 0%, rgba(255,255,255,0.3), transparent 60%);
-      pointer-events: none;
-    }
-    .glass-button-accent:hover {
-      transform: translateY(-2px) scale(1.02);
-      background: linear-gradient(155deg, rgba(129,140,248,0.68), rgba(99,102,241,0.45));
-      box-shadow:
-        0 14px 34px -6px rgba(79,70,229,0.65),
-        inset 0 1px 0 rgba(255,255,255,0.5);
-    }
+        /* Navigation */
 
-    .glass-close {
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.16);
-      transition: background 0.25s ease, transform 0.25s ease;
-    }
-    .glass-close:hover {
-      background: rgba(255,255,255,0.16);
-      transform: scale(1.08);
-    }
-  </style>
+        nav {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            padding: 18px 7%;
+
+            background: rgba(13, 13, 13, 0.85);
+            backdrop-filter: blur(12px);
+
+            border-bottom: 1px solid #242424;
+        }
+
+        .logo {
+            font-size: 1.2rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            color: #a8a8a8;
+            font-size: 0.95rem;
+        }
+
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+
+        /* Hero */
+
+        .hero {
+            min-height: 88vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 80px 20px;
+
+            background:
+                radial-gradient(
+                    circle at center,
+                    #252018 0%,
+                    #131313 42%,
+                    #0d0d0d 75%
+                );
+        }
+
+        .hero-content {
+            max-width: 850px;
+        }
+
+        .eyebrow {
+            display: inline-block;
+
+            margin-bottom: 18px;
+            padding: 6px 12px;
+
+            border: 1px solid #3a3329;
+            border-radius: 999px;
+
+            color: #b9a78e;
+            font-size: 0.8rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+        }
+
+        .hero h1 {
+            font-size: clamp(4rem, 11vw, 8rem);
+            line-height: 0.95;
+            letter-spacing: -5px;
+
+            margin-bottom: 25px;
+        }
+
+        .hero h1 span {
+            color: #b9a78e;
+        }
+
+        .hero p {
+            max-width: 620px;
+            margin: 0 auto 35px;
+
+            color: #a7a7a7;
+            font-size: 1.15rem;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            padding: 12px 22px;
+
+            border-radius: 8px;
+
+            font-weight: 700;
+
+            transition:
+                transform 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .button:hover {
+            transform: translateY(-2px);
+        }
+
+        .button-primary {
+            background: #b9a78e;
+            color: #111111;
+        }
+
+        .button-primary:hover {
+            background: #c9b99f;
+        }
+
+        .button-secondary {
+            border: 1px solid #3a3a3a;
+            color: #eeeeee;
+        }
+
+        .button-secondary:hover {
+            background: #191919;
+        }
+
+        /* General sections */
+
+        section {
+            max-width: 1100px;
+            margin: auto;
+            padding: 100px 7%;
+        }
+
+        .section-label {
+            color: #b9a78e;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+
+            margin-bottom: 10px;
+        }
+
+        section h2 {
+            font-size: clamp(2rem, 5vw, 3rem);
+            margin-bottom: 15px;
+        }
+
+        .section-description {
+            color: #999999;
+            max-width: 650px;
+            margin-bottom: 45px;
+        }
+
+        /* Features */
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .card {
+            padding: 28px;
+
+            background: #151515;
+
+            border: 1px solid #272727;
+            border-radius: 14px;
+
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: #4a4034;
+        }
+
+        .card-icon {
+            font-size: 1.8rem;
+            margin-bottom: 18px;
+        }
+
+        .card h3 {
+            margin-bottom: 8px;
+        }
+
+        .card p {
+            color: #929292;
+            font-size: 0.95rem;
+        }
+
+        /* Device */
+
+        .device {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .device-info {
+            padding: 30px;
+
+            background: #151515;
+            border: 1px solid #272727;
+            border-radius: 14px;
+        }
+
+        .device-name {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .device-model {
+            color: #b9a78e;
+            margin-bottom: 25px;
+        }
+
+        .spec {
+            display: flex;
+            justify-content: space-between;
+
+            padding: 12px 0;
+
+            border-bottom: 1px solid #292929;
+
+            color: #999999;
+        }
+
+        .spec:last-child {
+            border-bottom: none;
+        }
+
+        .spec strong {
+            color: #eeeeee;
+        }
+
+        /* Release */
+
+        .release {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 30px;
+
+            padding: 35px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #191713,
+                    #121212
+                );
+
+            border: 1px solid #393126;
+            border-radius: 16px;
+        }
+
+        .release-version {
+            color: #b9a78e;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+
+            margin-bottom: 8px;
+        }
+
+        .release h3 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .release p {
+            color: #999999;
+        }
+
+        /* Source */
+
+        .source {
+            text-align: center;
+        }
+
+        .source .section-description {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Footer */
+
+        footer {
+            padding: 35px 7%;
+
+            border-top: 1px solid #242424;
+
+            color: #777777;
+            font-size: 0.85rem;
+
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        footer strong {
+            color: #aaaaaa;
+        }
+
+        /* Mobile */
+
+        @media (max-width: 750px) {
+            nav {
+                padding: 16px 5%;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 75px 5%;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .device {
+                grid-template-columns: 1fr;
+            }
+
+            .release {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .hero h1 {
+                letter-spacing: -3px;
+            }
+        }
+    </style>
 </head>
-<body class="bg-gray-950 text-gray-100 font-sans relative">
 
-  <!-- Ambient background glow that follows down the page so glass panels have color to refract -->
-  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-    <div class="absolute -top-40 -left-40 w-[36rem] h-[36rem] rounded-full bg-blue-600/25 blur-[120px]"></div>
-    <div class="absolute top-1/3 -right-32 w-[30rem] h-[30rem] rounded-full bg-purple-600/25 blur-[120px]"></div>
-    <div class="absolute bottom-0 left-1/4 w-[32rem] h-[32rem] rounded-full bg-indigo-500/20 blur-[120px]"></div>
-  </div>
+<body>
 
-  <!-- Hero -->
-<section class="relative min-h-screen flex flex-col justify-center items-center text-center overflow-hidden">
-  <!-- Animated blobs background -->
-  <div class="animated-bg"></div>
-  <!-- Dark overlay -->
-  <div class="absolute inset-0 bg-black/40 z-0"></div>
-  <div class="absolute inset-0 bg-black/40 z-0"></div>
-    <div class="relative z-10">
-      <img src="https://danithesillyfem.github.io/tdk/logo.png" alt="TDK Logo" class="mx-auto object-cover rounded-lg">
-      <h1 class="text-5xl font-bold mb-4">TouchDirt Kernel</h1>
-      <p class="text-xl mb-8">Currently only for the A04 lmao</p>
-      <button onclick="openModal()" class="glass-button px-8 py-4 text-gray-100 font-semibold rounded-2xl">
-        ⬇ Download Now
-      </button>
-      <p class="mt-6">
-        <a href="https://t.me/touchdirtkernel" class="text-indigo-400 hover:underline">Join our telegram group :D</a>
-      </p>
-    </div>
-  </section>
+    <!-- Navigation -->
 
-  <!-- Supported Devices -->
-  <section class="max-w-5xl mx-auto px-6 py-16 text-center">
-    <h2 class="text-3xl font-bold mb-8">📱 Supported Devices</h2>
-    <div class="grid md:grid-cols-2 gap-8">
-      <div class="glass p-6 rounded-3xl flex items-center space-x-4">
-        <img src="https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a04.jpg" alt="Galaxy A04 SM-A045F" class="w-20 h-24 object-cover rounded-lg">
-        <h3 class="text-lg font-semibold">Galaxy A04 – SM-A045F</h3>
-         <p class="mt-2">
-      <a href="https://github.com/DaniTheSillyFem/android_kernel_samsung_a04" target="_blank" class="text-indigo-400 hover:underline">
-        Source Code on GitHub
-      </a>
-    </p>
-      </div>
-    </div>
-  </section>
+    <nav>
+        <a href="#" class="logo">TOUCHDIRT</a>
 
-  <!-- Features -->
-  <section class="max-w-5xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-8 text-center">
-    <div class="glass p-6 rounded-3xl">
-      <h3 class="text-xl font-semibold mb-2">⚙  BPF (WIP)</h3>
-      <p class="text-gray-400">Not yet, will add in v2.0</p>
-    </div>
-    <div class="glass p-6 rounded-3xl">
-      <h3 class="text-xl font-semibold mb-2">♟  Vanilla OR ReSukiSU</h3>
-      <p class="text-gray-400">Implemented latest ReSukiSU with Manual Hooks (or you can get a vanilla build instead.)</p>
-    </div>
-  </section>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="#device">Device</a>
+            <a href="#release">Release</a>
+            <a href="#source">Source</a>
+        </div>
+    </nav>
 
-  <!-- Changelog -->
-  <section class="max-w-4xl mx-auto px-6 py-16">
-    <h2 class="text-3xl font-bold text-center mb-8">📜 Contributors</h2>
-    <div class="space-y-4">
-      <div class="glass p-6 rounded-3xl items-center flex">
-        <img src="https://avatars.githubusercontent.com/u/278637923" class="w-24 h-24 object-cover rounded-lg">
-        <h3 class="text-lg font-semibold">&nbsp DaniTheSillyFem &nbsp</h3>
-      <a href="https://github.com/DaniTheSillyFem/" target="_blank" class="text-indigo-400 hover:underline">
-        View GitHub profile
-      </a>
-      </div>
-    </br>
-    </div>
-  </section>
 
-  <!-- Footer -->
-  <footer class="py-6 text-center text-gray-500 border-t border-gray-800">
-    <p>© 2026 DaniTheSillyFem. Always go higher.</p>
+    <!-- Hero -->
 
-  </footer>
+    <header class="hero">
 
-<!-- Download Modal -->
-<div id="downloadModal" class="fixed inset-0 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
-  <div class="glass-modal p-8 rounded-3xl w-full max-w-lg relative">
-    <button onclick="closeModal()" class="glass-close absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-300 hover:text-white">✖</button>
-    <h2 class="text-2xl font-bold mb-6">Download TouchDirt Kernel</h2>
+        <div class="hero-content">
 
-    <!-- Dropdowns -->
-    <label class="block text-left mb-2 font-medium">Select Device:</label>
-    <select id="deviceSelect" class="glass-select w-full p-3 rounded-xl text-gray-100 mb-4">
-      <option value="">Choose Device</option>
-      <option value="SM-A045F">Galaxy A04 – SM-A045F</option>
-    </select>
+            <div class="eyebrow">
+                Android Kernel
+            </div>
 
-    <label class="block text-left mb-2 font-medium">Select Version:</label>
-    <select id="versionSelect" class="glass-select w-full p-3 rounded-xl text-gray-100 mb-6" disabled>
-      <option value="">Choose Version</option>
-    </select>
+            <h1>
+                Touch<span>Dirt</span>
+            </h1>
 
-    <!-- Release Card -->
-    <div id="releaseCard" class="glass hidden p-6 rounded-2xl mt-4">
-      <h3 id="releaseTitle" class="text-xl font-semibold mb-2">Release</h3>
-      <p id="releaseDetails" class="text-gray-400 text-sm mb-4">Details about release…</p>
-      <a id="releaseLink" href="#" class="glass-button-accent px-6 py-3 text-white font-semibold rounded-xl">
-        Download
-      </a>
-    </div>
-  </div>
-<script>
-  const deviceSelect = document.getElementById('deviceSelect');
-  const versionSelect = document.getElementById('versionSelect');
-  const releaseCard = document.getElementById('releaseCard');
-  const releaseTitle = document.getElementById('releaseTitle');
-  const releaseDetails = document.getElementById('releaseDetails');
-  const releaseLink = document.getElementById('releaseLink');
+            <p>
+                A custom Linux kernel built for the Samsung Galaxy A04.
+                Small device. Custom kernel. No unnecessary nonsense.
+            </p>
 
-  const releases = {
-    "SM-A045F": {
-      "v1.0": {
-        title: "Inital release for SM-A045F",
-        details: "Released: Sep 18 2026 • SELinux: Enforcing/Permissive • Size: 12.4MB",
-        link: "https://github.com/DaniTheSillyFem/android_kernel_samsung_a04/releases"
-      }
-    }
-  };
+            <div class="buttons">
 
-  function openModal() {
-    document.getElementById('downloadModal').classList.remove('hidden');
-    document.body.classList.add('modal-open');
-  }
-  function closeModal() {
-    document.getElementById('downloadModal').classList.add('hidden');
-    document.body.classList.remove('modal-open');
-  }
+                <!-- Change these links -->
 
-  function updateVersions() {
-    const device = deviceSelect.value;
-    versionSelect.innerHTML = '<option value="">Choose Version</option>';
-    releaseCard.classList.add('hidden');
+                <a
+                    class="button button-primary"
+                    href="#release"
+                >
+                    Download
+                </a>
 
-    if (device && releases[device]) {
-      versionSelect.disabled = false;
-      Object.keys(releases[device]).forEach(ver => {
-        const opt = document.createElement('option');
-        opt.value = ver;
-        opt.textContent = ver;
-        versionSelect.appendChild(opt);
-      });
-    } else {
-      versionSelect.disabled = true;
-    }
-  }
+                <a
+                    class="button button-secondary"
+                    href="https://github.com/"
+                >
+                    View Source
+                </a>
 
-  function updateReleaseCard() {
-    const device = deviceSelect.value;
-    const version = versionSelect.value;
+            </div>
 
-    if (device && version && releases[device] && releases[device][version]) {
-      const release = releases[device][version];
-      releaseTitle.textContent = release.title;
-      releaseDetails.textContent = release.details;
-      releaseLink.href = release.link;
-      releaseCard.classList.remove('hidden');
-    } else {
-      releaseCard.classList.add('hidden');
-    }
-  }
+        </div>
 
-  deviceSelect.addEventListener('change', updateVersions);
-  versionSelect.addEventListener('change', updateReleaseCard);
-</script>
+    </header>
+
+
+    <!-- Features -->
+
+    <section id="features">
+
+        <div class="section-label">
+            What's inside
+        </div>
+
+        <h2>
+            Built from the ground up.
+        </h2>
+
+        <p class="section-description">
+            TouchDirt focuses on useful kernel functionality and
+            practical improvements for the Galaxy A04.
+        </p>
+
+        <div class="features">
+
+            <article class="card">
+
+                <div class="card-icon">⚙️</div>
+
+                <h3>ReSukiSU</h3>
+
+                <p>
+                    Kernel-level root support through ReSukiSU,
+                    integrated directly into the kernel.
+                </p>
+
+            </article>
+
+
+            <article class="card">
+
+                <div class="card-icon">💾</div>
+
+                <h3>F2FS Fixes</h3>
+
+                <p>
+                    Filesystem fixes and backports aimed at
+                    improving reliability on F2FS.
+                </p>
+
+            </article>
+
+
+            <article class="card">
+
+                <div class="card-icon">🧩</div>
+
+                <h3>Fake Uname</h3>
+
+                <p>
+                    Optional kernel release spoofing for software
+                    that expects a newer kernel version.
+                </p>
+
+            </article>
+
+        </div>
+
+    </section>
+
+
+    <!-- Device -->
+
+    <section id="device">
+
+        <div class="device">
+
+            <div>
+
+                <div class="section-label">
+                    Supported device
+                </div>
+
+                <h2>
+                    Galaxy A04
+                </h2>
+
+                <p class="section-description">
+                    TouchDirt is currently developed specifically
+                    for the Samsung Galaxy A04.
+                </p>
+
+            </div>
+
+
+            <div class="device-info">
+
+                <div class="device-name">
+                    Samsung Galaxy A04
+                </div>
+
+                <div class="device-model">
+                    SM-A045F
+                </div>
+
+                <div class="spec">
+                    <span>Kernel</span>
+                    <strong>4.19.325</strong>
+                </div>
+
+                <div class="spec">
+                    <span>Architecture</span>
+                    <strong>ARM64</strong>
+                </div>
+
+                <div class="spec">
+                    <span>Platform</span>
+                    <strong>MediaTek Helio P35</strong>
+                </div>
+
+                <div class="spec">
+                    <span>Android</span>
+                    <strong>Android 16</strong>
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- Release -->
+
+    <section id="release">
+
+        <div class="section-label">
+            Latest release
+        </div>
+
+        <h2>
+            Get TouchDirt.
+        </h2>
+
+        <p class="section-description">
+            Grab the latest release and read the changelog before
+            flashing anything.
+        </p>
+
+        <div class="release">
+
+            <div>
+
+                <div class="release-version">
+                    Latest
+                </div>
+
+                <h3>
+                    TouchDirt v1.0
+                </h3>
+
+                <p>
+                    Linux 4.19.325 · ReSukiSU
+                </p>
+
+            </div>
+
+            <!-- Replace this with your release URL -->
+
+            <a
+                class="button button-primary"
+                href="https://github.com/"
+            >
+                View Release
+            </a>
+
+        </div>
+
+    </section>
+
+
+    <!-- Source -->
+
+    <section id="source" class="source">
+
+        <div class="section-label">
+            Open source
+        </div>
+
+        <h2>
+            See what's under the dirt.
+        </h2>
+
+        <p class="section-description">
+            TouchDirt is developed openly. Browse the source,
+            inspect the changes, and follow development on GitHub.
+        </p>
+
+        <!-- Replace with your repository -->
+
+        <a
+            class="button button-secondary"
+            href="https://github.com/"
+        >
+            GitHub Repository
+        </a>
+
+    </section>
+
+
+    <!-- Footer -->
+
+    <footer>
+
+        <div>
+            <strong>TouchDirt</strong>
+            · Custom kernel for the Galaxy A04
+        </div>
+
+        <div>
+            © 2026 TouchDirt
+        </div>
+
+    </footer>
 
 </body>
-  </html>
+</html>
