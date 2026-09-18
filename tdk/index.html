@@ -79,10 +79,17 @@
             }
 
             .nav-links {
+                display: flex;
                 flex-wrap: wrap;
                 justify-content: center;
                 gap: 10px 20px;
-                font-size: 0.9rem;
+                width: 100%;
+                max-width: 100%;
+                box-sizing: border-box;
+            }
+
+            .nav-links a {
+                white-space: normal;
             }
         }
 
