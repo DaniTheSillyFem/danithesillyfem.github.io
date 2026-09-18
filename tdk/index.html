@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TouchDirtKernel</title>
+  <meta content="TouchDirt Custom Kernel" property="og:title" />
+  <meta content="Not affiliated with TGK." property="og:description" />
+  <meta content="https://danithesillyfem.github.io/tdk" property="og:url" />
+  <meta content="https://danithesillyfem.github.io/tdk/logo.png" property="og:image" />
+  <meta content="#43B581" data-react-helmet="true" name="theme-color" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+  .animated-bg {
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background: radial-gradient(circle at 30% 30%, #3e8ef7, transparent 50%),
+                radial-gradient(circle at 70% 70%, #6c5ce7, transparent 50%),
+                radial-gradient(circle at 50% 80%, #9333ea, transparent 50%);
+    animation: moveGradient 15s infinite linear;
+    filter: blur(80px);
+    z-index: 0;
+  }
+
+  @keyframes moveGradient {
+    0%   { transform: translate(0, 0) rotate(0deg); }
+    50%  { transform: translate(20%, 20%) rotate(180deg); }
+    100% { transform: translate(0, 0) rotate(360deg); }
+  }
+    body.modal-open {
+      overflow: hidden;
+    }
+
+    /* Liquid glass */
+    .glass {
+      position: relative;
+      background: linear-gradient(155deg, rgba(255,255,255,0.10), rgba(255,255,255,0.03) 60%);
+      backdrop-filter: blur(22px) saturate(160%);
+      -webkit-backdrop-filter: blur(22px) saturate(160%);
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow:
+        0 10px 40px -8px rgba(0,0,0,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.22),
+        inset 0 -1px 12px rgba(255,255,255,0.03);
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(.2,.8,.2,1), box-shadow 0.35s ease, border-color 0.35s ease, background 0.35s ease;
+    }
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(120% 80% at 15% -10%, rgba(255,255,255,0.16), transparent 55%);
+      pointer-events: none;
+    }
+    .glass:hover {
+      transform: translateY(-3px);
+      border-color: rgba(255,255,255,0.24);
+      box-shadow:
+        0 16px 50px -8px rgba(0,0,0,0.6),
+        inset 0 1px 0 rgba(255,255,255,0.3),
+        inset 0 -1px 12px rgba(255,255,255,0.05);
+    }
+
+    .glass-modal {
+      position: relative;
+      background: linear-gradient(160deg, rgba(255,255,255,0.12), rgba(255,255,255,0.04) 65%);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255,255,255,0.18);
+      box-shadow:
+        0 24px 70px -12px rgba(0,0,0,0.7),
+        inset 0 1px 0 rgba(255,255,255,0.25),
+        inset 0 -1px 16px rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+    .glass-modal::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(140% 70% at 20% -10%, rgba(255,255,255,0.18), transparent 55%);
+      pointer-events: none;
+    }
+
+    .glass-select {
+      background: rgba(255,255,255,0.06);
+      backdrop-filter: blur(10px) saturate(150%);
+      -webkit-backdrop-filter: blur(10px) saturate(150%);
+      border: 1px solid rgba(255,255,255,0.16);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+      transition: border-color 0.25s ease, background 0.25s ease;
+    }
+    .glass-select:focus {
+      outline: none;
+      border-color: rgba(255,255,255,0.4);
+      background: rgba(255,255,255,0.09);
+    }
+    .glass-select option {
+      background-color: #14141c;
+      color: #f3f4f6;
+    }
+
+    .glass-button {
+      position: relative;
+      background: linear-gradient(155deg, rgba(255,255,255,0.18), rgba(255,255,255,0.06));
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      border: 1px solid rgba(255,255,255,0.28);
+      box-shadow:
+        0 8px 24px -6px rgba(0,0,0,0.5),
+        inset 0 1px 0 rgba(255,255,255,0.35);
+      overflow: hidden;
+      transition: transform 0.3s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease, background 0.3s ease;
+    }
+    .glass-button::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(120% 100% at 30% 0%, rgba(255,255,255,0.25), transparent 60%);
+      pointer-events: none;
+    }
+    .glass-button:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: linear-gradient(155deg, rgba(255,255,255,0.24), rgba(255,255,255,0.08));
+      box-shadow:
+        0 12px 32px -6px rgba(0,0,0,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+    .glass-button:active {
+      transform: translateY(0) scale(0.98);
+    }
+
+    .glass-button-accent {
+      position: relative;
+      background: linear-gradient(155deg, rgba(129,140,248,0.55), rgba(99,102,241,0.35));
+      backdrop-filter: blur(16px) saturate(160%);
+      -webkit-backdrop-filter: blur(16px) saturate(160%);
+      border: 1px solid rgba(199,210,254,0.4);
+      box-shadow:
+        0 10px 28px -6px rgba(79,70,229,0.55),
+        inset 0 1px 0 rgba(255,255,255,0.4);
+      overflow: hidden;
+      display: inline-block;
+      transition: transform 0.3s cubic-bezier(.2,.8,.2,1), box-shadow 0.3s ease, background 0.3s ease;
+    }
+    .glass-button-accent::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(120% 100% at 30% 0%, rgba(255,255,255,0.3), transparent 60%);
+      pointer-events: none;
+    }
+    .glass-button-accent:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: linear-gradient(155deg, rgba(129,140,248,0.68), rgba(99,102,241,0.45));
+      box-shadow:
+        0 14px 34px -6px rgba(79,70,229,0.65),
+        inset 0 1px 0 rgba(255,255,255,0.5);
+    }
+
+    .glass-close {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.16);
+      transition: background 0.25s ease, transform 0.25s ease;
+    }
+    .glass-close:hover {
+      background: rgba(255,255,255,0.16);
+      transform: scale(1.08);
+    }
+  </style>
+</head>
+<body class="bg-gray-950 text-gray-100 font-sans relative">
+
+  <!-- Ambient background glow that follows down the page so glass panels have color to refract -->
+  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div class="absolute -top-40 -left-40 w-[36rem] h-[36rem] rounded-full bg-blue-600/25 blur-[120px]"></div>
+    <div class="absolute top-1/3 -right-32 w-[30rem] h-[30rem] rounded-full bg-purple-600/25 blur-[120px]"></div>
+    <div class="absolute bottom-0 left-1/4 w-[32rem] h-[32rem] rounded-full bg-indigo-500/20 blur-[120px]"></div>
+  </div>
+
+  <!-- Hero -->
+<section class="relative min-h-screen flex flex-col justify-center items-center text-center overflow-hidden">
+  <!-- Animated blobs background -->
+  <div class="animated-bg"></div>
+  <!-- Dark overlay -->
+  <div class="absolute inset-0 bg-black/40 z-0"></div>
+  <div class="absolute inset-0 bg-black/40 z-0"></div>
+    <div class="relative z-10">
+      <img src="https://micr0softstore.github.io/tgk/logo.png" alt="Galaxy A13 Exynos" class="mx-auto object-cover rounded-lg">
+      <h1 class="text-5xl font-bold mb-4">touchGrassKernel</h1>
+      <p class="text-xl mb-8">For a lot of devices</p>
+      <button onclick="openModal()" class="glass-button px-8 py-4 text-gray-100 font-semibold rounded-2xl">
+        ⬇ Download Now
+      </button>
+      <p class="mt-6">
+        <a href="https://t.me/touchgrasskernel" class="text-indigo-400 hover:underline">Join our telegram group</a>
+      </p>
+    </div>
+  </section>
+
+  <!-- Supported Devices -->
+  <section class="max-w-5xl mx-auto px-6 py-16 text-center">
+    <h2 class="text-3xl font-bold mb-8">📱 Supported Devices</h2>
+    <div class="grid md:grid-cols-2 gap-8">
+      <div class="glass p-6 rounded-3xl flex items-center space-x-4">
+        <img src="https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-tab-a-101-2019.jpg" alt="Galaxy Tab A SM-T515" class="w-20 h-24 object-cover rounded-lg">
+        <h3 class="text-lg font-semibold">Galaxy Tab A (2019) LTE – SM-T515</h3>
+         <p class="mt-2">
+      <a href="https://github.com/micr0softstore/android_linux_kernel_samsung_SM-T515" target="_blank" class="text-indigo-400 hover:underline">
+        Source Code on GitHub
+      </a>
+    </p>
+      </div>
+      <div class="glass p-6 rounded-3xl flex items-center space-x-4">
+        <img src="https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-tab-a-101-2019.jpg" alt="Galaxy Tab A SM-T510" class="w-20 h-24 object-cover rounded-lg">
+        <h3 class="text-lg font-semibold">Galaxy Tab A (2019) WIFI – SM-T510</h3>
+         <p class="mt-2">
+      <a href="https://github.com/micr0softstore/samsung_android_kernel_T510" target="_blank" class="text-indigo-400 hover:underline">
+        Source Code on GitHub
+      </a>
+    </p>
+      </div>
+      <div class="glass p-6 rounded-3xl flex items-center space-x-4">
+        <img src="https://xdaforums.com/data/xda/device/icon/13/1369.jpg?1615989979" alt="Galaxy A52 5G" class="w-20 h-24 object-cover rounded-lg">
+        <h3 class="text-lg font-semibold">Galaxy A52 5G - SM-A526B</h3>
+         <p class="mt-2">
+      <a href="https://github.com/micr0softstore/samsung_andrid_kernel_a52xq" target="_blank" class="text-indigo-400 hover:underline">
+        Source Code on GitHub
+      </a>
+    </p>
+      </div>
+      <div class="glass p-6 rounded-3xl flex items-center space-x-4">
+        <img src="https://product.hstatic.net/200000823693/product/galaxya13_2b615446e46c42c99fbc9d6436ea7353.jp" alt="Galaxy A13 Mtk" class="w-20 h-24 object-cover rounded-lg">
+        <h3 class="text-lg font-semibold">Galaxy A13 - SM-A137F</h3>
+         <p class="mt-2">
+      <a href="https://github.com/micr0softstore/samsung_kernel_a13ve" target="_blank" class="text-indigo-400 hover:underline">
+        Source Code on GitHub
+      </a>
+    </p>
+      </div>
+      <div class="glass p-6 rounded-3xl flex items-center space-x-4">
+        <img src="https://product.hstatic.net/200000823693/product/galaxya13_2b615446e46c42c99fbc9d6436ea7353.jpg" alt="Galaxy A13 Exynos" class="w-20 h-24 object-cover rounded-lg">
+        <h3 class="text-lg font-semibold">Galaxy A13 - SM-A135F</h3>
+         <p class="mt-2">
+      <a href="https://github.com/micr0softstore/A135f-U-u5-SA" target="_blank" class="text-indigo-400 hover:underline">
+        Source Code on GitHub
+      </a>
+    </p>
+      </div>
+      <div class="glass p-6 rounded-3xl flex items-center space-x-4">
+        <img src="https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a5-2017-new.jpg" alt="Galaxy A5 7" class="w-20 h-24 object-cover rounded-lg">
+        <h3 class="text-lg font-semibold">Galaxy A5 - SM-A510F</h3>
+         <p class="mt-2">
+      <a href="https://github.com/micr0softstore/android_kernel_samsung_universal7880_1" target="_blank" class="text-indigo-400 hover:underline">
+        Source Code on GitHub
+      </a>
+    </p>
+      </div>
+       <div class="glass p-6 rounded-3xl flex items-center space-x-4">
+        <img src="https://fdn2.gsmarena.com/vv/bigpic/samsung-galaxy-a02s-sm-a025-new.jpg" alt="Galaxy A02s" class="w-20 h-24 object-cover rounded-lg">
+        <h3 class="text-lg font-semibold">Galaxy A02s - SM-A025F</h3>
+         <p class="mt-2">
+      <a href="https://github.com/micr0softstore/samsung_android_kernel_a02q" target="_blank" class="text-indigo-400 hover:underline">
+        Source Code on GitHub
+      </a>
+    </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="max-w-5xl mx-auto px-6 py-16 grid md:grid-cols-3 gap-8 text-center">
+    <div class="glass p-6 rounded-3xl">
+      <h3 class="text-xl font-semibold mb-2">🔀 Switchable Enforcement</h3>
+      <p class="text-gray-400">Switch between Permissive and Enforcing SELinux</p>
+    </div>
+    <div class="glass p-6 rounded-3xl">
+      <h3 class="text-xl font-semibold mb-2">⚙ Bpf</h3>
+      <p class="text-gray-400">Added bpf commits so can boot new versions of android</p>
+    </div>
+    <div class="glass p-6 rounded-3xl">
+      <h3 class="text-xl font-semibold mb-2">♟️ KernelSU-Next</h3>
+      <p class="text-gray-400">Implemented latest KernelSU-Next with Manual hooks</p>
+    </div>
+  </section>
+
+  <!-- Changelog -->
+  <section class="max-w-4xl mx-auto px-6 py-16">
+    <h2 class="text-3xl font-bold text-center mb-8">📜 Contributors</h2>
+    <div class="space-y-4">
+      <div class="glass p-6 rounded-3xl items-center flex">
+        <img src="https://avatars.githubusercontent.com/u/196047120?v=4" alt="Galaxy Tab A SM-T515" class="w-24 h-24 object-cover rounded-lg">
+        <h3 class="text-lg font-semibold">&nbsp Microsoft Store &nbsp</h3>
+      <a href="https://github.com/micr0softstore/" target="_blank" class="text-indigo-400 hover:underline">
+        View GitHub profile
+      </a>
+      </div>
+    </br>
+    </div>
+    <div class="space-y-4">
+      <div class="glass p-6 rounded-3xl items-center flex">
+        <img src="https://avatars.githubusercontent.com/u/183935403?v=4" alt="Galaxy Tab A SM-T515" class="w-24 h-24 object-cover rounded-lg">
+        <h3 class="text-lg font-semibold">&nbsp Pritam &nbsp</h3>
+      <a href="https://github.com/nostalgiceagle" target="_blank" class="text-indigo-400 hover:underline">
+        View GitHub profile
+      </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-6 text-center text-gray-500 border-t border-gray-800">
+    <p>© 2025 micr0softstore. Built for you.</p>
+
+  </footer>
+
+<!-- Download Modal -->
+<div id="downloadModal" class="fixed inset-0 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center z-50">
+  <div class="glass-modal p-8 rounded-3xl w-full max-w-lg relative">
+    <button onclick="closeModal()" class="glass-close absolute top-3 right-3 w-8 h-8 flex items-center justify-center rounded-full text-gray-300 hover:text-white">✖</button>
+    <h2 class="text-2xl font-bold mb-6">Download touchGrassKernel</h2>
+
+    <!-- Dropdowns -->
+    <label class="block text-left mb-2 font-medium">Select Device:</label>
+    <select id="deviceSelect" class="glass-select w-full p-3 rounded-xl text-gray-100 mb-4">
+      <option value="">Choose Device</option>
+      <option value="SM-T515">Galaxy Tab A (2019) LTE – SM-T515</option>
+      <option value="SM-T510">Galaxy Tab A (2019) WIFI – SM-T510</option>
+      <option value="SM-A526B">Galaxy A52 5G - SM-A526B</option>
+      <option value="SM-A137F">Galaxy A13 - SM-A137F</option>
+      <option value="SM-A135F">Galaxy A13 - SM-A135F</option>
+    </select>
+
+    <label class="block text-left mb-2 font-medium">Select Version:</label>
+    <select id="versionSelect" class="glass-select w-full p-3 rounded-xl text-gray-100 mb-6" disabled>
+      <option value="">Choose Version</option>
+    </select>
+
+    <!-- Release Card -->
+    <div id="releaseCard" class="glass hidden p-6 rounded-2xl mt-4">
+      <h3 id="releaseTitle" class="text-xl font-semibold mb-2">Release</h3>
+      <p id="releaseDetails" class="text-gray-400 text-sm mb-4">Details about release…</p>
+      <a id="releaseLink" href="#" class="glass-button-accent px-6 py-3 text-white font-semibold rounded-xl">
+        Download
+      </a>
+    </div>
+  </div>
+<script>
+  const deviceSelect = document.getElementById('deviceSelect');
+  const versionSelect = document.getElementById('versionSelect');
+  const releaseCard = document.getElementById('releaseCard');
+  const releaseTitle = document.getElementById('releaseTitle');
+  const releaseDetails = document.getElementById('releaseDetails');
+  const releaseLink = document.getElementById('releaseLink');
+
+  const releases = {
+    "SM-T515": {
+      "v1.0": {
+        title: "Inital release for SM-T515",
+        details: "Released: Aug 27 2025 • SELinux: Permissive • Size: 12.4MB",
+        link: "https://github.com/micr0softstore/android_linux_kernel_samsung_SM-T515/releases/download/Stable/touchGrassKernel_v1.1-gta3xlinu-permissive.zip"
+      }
+    },
+
+    "SM-T510": {
+      "v1.0": {
+        title: "Inital release for SM-T510",
+        details: "Released: Sep 14 2025 • SELinux: Permissive • Size: 12.4MB",
+        link: "https://github.com/micr0softstore/samsung_android_kernel_T510/releases/download/Perm/tgk_v1.0-gta3xlwifi-20250913.zip"
+      }
+    },
+
+    "SM-A526B": {
+      "v1.0": {
+        title: "SM-A526B inital release (Android 15 max)",
+        details: "Released: Sep 13 2025 • SELinux: Multi • Size: 21MB • KernelSU: none",
+        link: "https://github.com/micr0softstore/samsung_andrid_kernel_a52xq/releases/download/Release/tgk_v1.0-a52xq_20250913.zip"
+      },
+       "v1.5": {
+        title: "SM-A526B for Android 16 (minimal 5.4)",
+        details: "Released: May 2 2026 • SELinux: Multi • Size: 21MB • KernelSU: none",
+        link: "https://github.com/micr0softstore/samsung_android_kernel_a52xq/releases/download/Release_v1-5/tgk_v1.5_a52xq_noksu.zip"
+      },
+       "v1.5.1": {
+        title: "SM-A526B for Android 16 (minimal 5.4) with ReSukisU",
+        details: "Released: Jul 9 2026 • SELinux: Multi • Size: 21MB • ReSukiSU: v4.1.0",
+        link: "https://github.com/micr0softstore/samsung_android_kernel_a52xq/releases/download/Release_v1-5/tgk_v1.5.1_a52xq_sukisu.zip"
+      }
+    },
+    "SM-A137F": {
+      "v1.0": {
+        title: "SM-A137F use manual hooks instead of kprobes",
+        details: "Released: July 16 2025 • SELinux: Multi• Size: 15.4MB",
+        link: "https://drive.google.com/file/d/103S-ehSFzkIRi6Y65SPtOqz14NhJLNpL/view"
+      }
+    },
+    "SM-A135F": {
+      "v1.0": {
+        title: "SM-A135F inital release",
+        details: "Released: Aug 9 2025 • SELinux: Multi • Size: 18MB",
+        link: "https://drive.google.com/file/d/17iQH9b7rBQ4Z4Zr1wkV-v8Iu_EvI7cmD/view?usp=sharing"
+      }
+    }
+  };
+
+  function openModal() {
+    document.getElementById('downloadModal').classList.remove('hidden');
+    document.body.classList.add('modal-open');
+  }
+  function closeModal() {
+    document.getElementById('downloadModal').classList.add('hidden');
+    document.body.classList.remove('modal-open');
+  }
+
+  function updateVersions() {
+    const device = deviceSelect.value;
+    versionSelect.innerHTML = '<option value="">Choose Version</option>';
+    releaseCard.classList.add('hidden');
+
+    if (device && releases[device]) {
+      versionSelect.disabled = false;
+      Object.keys(releases[device]).forEach(ver => {
+        const opt = document.createElement('option');
+        opt.value = ver;
+        opt.textContent = ver;
+        versionSelect.appendChild(opt);
+      });
+    } else {
+      versionSelect.disabled = true;
+    }
+  }
+
+  function updateReleaseCard() {
+    const device = deviceSelect.value;
+    const version = versionSelect.value;
+
+    if (device && version && releases[device] && releases[device][version]) {
+      const release = releases[device][version];
+      releaseTitle.textContent = release.title;
+      releaseDetails.textContent = release.details;
+      releaseLink.href = release.link;
+      releaseCard.classList.remove('hidden');
+    } else {
+      releaseCard.classList.add('hidden');
+    }
+  }
+
+  deviceSelect.addEventListener('change', updateVersions);
+  versionSelect.addEventListener('change', updateReleaseCard);
+</script>
+
+</body>
+  </html>
