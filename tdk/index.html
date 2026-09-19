@@ -71,24 +71,53 @@
             color: #ffffff;
         }
 
+        .menu-toggle {
+            display: none;
+        }
+
         @media (max-width: 700px) {
             nav {
-                flex-direction: column;
+                position: sticky;
+                top: 0;
+
+                display: grid;
+                grid-template-columns: 1fr auto;
                 align-items: center;
-                gap: 14px;
+
                 padding: 16px 5%;
             }
 
-            .nav-links {
-                width: 100%;
-                display: flex;
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 10px 24px;
+            .logo {
+                justify-self: start;
             }
 
-            .nav-links a {
-                flex: 0 0 auto;
+            .menu-toggle {
+                display: block;
+
+                background: none;
+                border: none;
+                color: #ffffff;
+
+                font-size: 1.6rem;
+                line-height: 1;
+                cursor: pointer;
+            }
+
+            .nav-links {
+                display: none;
+
+                grid-column: 1 / -1;
+                width: 100%;
+
+                flex-direction: column;
+                align-items: center;
+
+                gap: 16px;
+                padding-top: 12px;
+            }
+
+            .nav-links.open {
+                display: flex;
             }
         }
 
@@ -423,6 +452,10 @@
     <nav>
         <a href="#" class="logo">TOUCHDIRT</a>
 
+        <button class="menu-toggle" aria-label="Open navigation">
+            ☰
+        </button>
+
         <div class="nav-links">
             <a href="#features">Features</a>
             <a href="#device">Device</a>
@@ -704,6 +737,15 @@ _____ _____  _  _
         </div>
 
     </footer>
+
+    <script>
+        const menuToggle = document.querySelector(".menu-toggle");
+        const navLinks = document.querySelector(".nav-links");
+
+        menuToggle.addEventListener("click", () => {
+            navLinks.classList.toggle("open");
+        });
+    </script>
 
 </body>
 </html>
