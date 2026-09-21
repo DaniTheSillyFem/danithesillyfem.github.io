@@ -666,8 +666,8 @@ _____ _____  _  _
                     Latest
                 </div>
 
-                <h3>
-                    TouchDirt v1.0.1
+                <h3> id="kernel-release">
+                   Loading...
                 </h3>
 
                 <p>
@@ -740,6 +740,18 @@ _____ _____  _  _
 
         menuToggle.addEventListener("click", () => {
             navLinks.classList.toggle("open");
+        });
+    </script>
+
+    <script>
+    fetch("https://api.github.com/repos/DaniTheSillyFem/android_kernel_samsung_a04/releases/latest")
+        .then(response => response.json())
+        .then(release => {
+            document.getElementById("kernel-release").textContent = release.name;
+        })
+        .catch(error => {
+            console.error("Failed to fetch GitHub release:", error);
+            document.getElementById("kernel-release").textContent = "Unable to fetch release";
         });
     </script>
 
