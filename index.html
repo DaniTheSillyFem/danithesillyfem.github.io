@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Ella's Projects</title>
+    <meta name="description" content="A collection of Ella's projects, experiments, and other silly things.">
+
+    <style>
+        :root {
+            --bg: #0d1117;
+            --card: #161b22;
+            --card-hover: #1c2330;
+            --text: #f0f6fc;
+            --muted: #8b949e;
+            --accent: #f5a9b8;
+            --accent-2: #5bcefa;
+            --border: #30363d;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family:
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+            background:
+                radial-gradient(
+                    circle at top,
+                    rgba(91, 206, 250, 0.12),
+                    transparent 35%
+                ),
+                var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .container {
+            width: min(100% - 40px, 1000px);
+            margin: auto;
+        }
+
+        header {
+            padding: 100px 0 70px;
+            text-align: center;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-bottom: 20px;
+            background: rgba(22, 27, 34, 0.8);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            line-height: 1;
+            letter-spacing: -0.05em;
+        }
+
+        .gradient {
+            background: linear-gradient(
+                90deg,
+                var(--accent),
+                var(--accent-2)
+            );
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .intro {
+            max-width: 650px;
+            margin: 24px auto 0;
+            color: var(--muted);
+            font-size: 1.1rem;
+        }
+
+        .projects {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 18px;
+            padding-bottom: 70px;
+        }
+
+        .project {
+            display: block;
+            padding: 24px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--card);
+            transition:
+                transform 0.2s ease,
+                border-color 0.2s ease,
+                background 0.2s ease;
+        }
+
+        .project:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+            background: var(--card-hover);
+        }
+
+        .project-icon {
+            font-size: 2rem;
+            margin-bottom: 12px;
+        }
+
+        .project h2 {
+            margin: 0 0 8px;
+            font-size: 1.35rem;
+        }
+
+        .project p {
+            margin: 0;
+            color: var(--muted);
+        }
+
+        .tag {
+            display: inline-block;
+            margin-top: 18px;
+            padding: 4px 9px;
+            border-radius: 6px;
+            background: rgba(91, 206, 250, 0.1);
+            color: var(--accent-2);
+            font-size: 0.8rem;
+        }
+
+        .about {
+            margin-bottom: 70px;
+            padding: 30px;
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            background: var(--card);
+        }
+
+        .about h2 {
+            margin-top: 0;
+        }
+
+        .about p {
+            color: var(--muted);
+        }
+
+        footer {
+            padding: 30px 0 50px;
+            border-top: 1px solid var(--border);
+            color: var(--muted);
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding-top: 70px;
+            }
+
+            .container {
+                width: min(100% - 28px, 1000px);
+            }
+
+            .projects {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container">
+            <div class="badge">welcome to my little corner of the internet :3</div>
+
+            <h1>
+                Ella's <span class="gradient">Projects</span>
+            </h1>
+
+            <p class="intro">
+                Android stuff, kernels, ROM experiments, random experiments,
+                and whatever else I decide to build.
+            </p>
+        </div>
+    </header>
+
+    <main class="container">
+
+        <section class="projects">
+
+            <!-- TouchDirt Kernel -->
+            <a class="project" href="/tdk/">
+                <div class="project-icon">📱</div>
+
+                <h2>TouchDirt Kernel</h2>
+
+                <p>
+                    A kernel for the A04, it's very barebones
+                    right now, lmao :3
+                </p>
+
+                <span class="tag">Android</span>
+            </a>
+
+            <!-- Add more projects here -->
+
+            <a class="project"
+               href="https://github.com/DaniTheSillyFem"
+               target="_blank"
+               rel="noopener noreferrer">
+
+                <div class="project-icon">💻</div>
+
+                <h2>GitHub</h2>
+
+                <p>
+                    Source code, experiments, kernel work,
+                    and other projects.
+                </p>
+
+                <span class="tag">Source code</span>
+            </a>
+
+        </section>
+
+        <section class="about">
+            <h2>About</h2>
+
+            <p>
+                I'm Ella, a student who likes messing around with Android,
+                building ROMs, modifying kernels, and occasionally making
+                things that probably didn't need to exist in the first place.
+            </p>
+
+            <p>
+                This site is where I keep my projects and experiments.
+            </p>
+        </section>
+
+    </main>
+
+    <footer>
+        <div class="container">
+            Built with HTML, questionable decisions, and GitHub Pages ♡
+        </div>
+    </footer>
+
+</body>
+  </html>
