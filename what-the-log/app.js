@@ -37,7 +37,7 @@ async function loadKnowledgeBase() {
 
         if (!response.ok) {
             throw new Error(
-                `Knowledge base returned HTTP ${response.status}`
+                "Knowledge base returned HTTP ${response.status}"
             );
         }
 
