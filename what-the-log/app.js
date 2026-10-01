@@ -2,7 +2,7 @@
  * WhatTheLog
  * Android error analyzer
  * The analyzer loads error definitions from the JSON knowledge base.
-*/
+ */
 
 const logInput = document.getElementById("log-input");
 const analyzeButton = document.getElementById("analyze-button");
@@ -30,38 +30,34 @@ let errors = [];
 
 * Load the error database from JSON.
   */
-  async function loadKnowledgeBase() {
-  try {
-  const response = await fetch("./data/errors/errors.json");
+async function loadKnowledgeBase() {
+    try {
+        const response = await fetch("./data/errors/errors.json");
 
-  ```
-   if (!response.ok) {
-       throw new Error(
-           `Knowledge base returned HTTP ${response.status}`
-       );
-   }
 
-   const data = await response.json();
+        if (!response.ok) {
+            throw new Error(
+                `Knowledge base returned HTTP ${response.status}`
+            );
+        }
 
-   if (!Array.isArray(data)) {
-       throw new Error("Knowledge base is not an array");
-   }
+        const data = await response.json();
 
-   errors = data;
+        if (!Array.isArray(data)) {
+            throw new Error("Knowledge base is not an array");
+        }
 
-   analyzeButton.disabled = false;
-  ```
+        errors = data;
 
-  } catch (error) {
-  console.error("Failed to load WhatTheLog knowledge base:", error);
+        analyzeButton.disabled = false;
 
-  ```
-   analyzeButton.disabled = true;
-   analyzeButton.textContent = "Database error";
-  ```
 
-  }
-  }
+    } catch (error) {
+        console.error("Failed to load WhatTheLog knowledge base:", error);
+        analyzeButton.disabled = true;
+        analyzeButton.textContent = "Database error";
+    }
+}
 
 /* =========================================================
 Signature matching
@@ -76,38 +72,35 @@ Signature matching
 * text
 * regex
   */
-  function matchesSignature(log, signature) {
-  if (!signature || !signature.type) {
-  return false;
-  }
-
-```
-if (signature.type === "text") {
-```
-
-```
-    return log.toLowerCase().includes(
-        String(signature.value).toLowerCase()
-    );
-}
-
-if (signature.type === "regex") {
-    try {
-        const regex = new RegExp(signature.value, "i");
-        return regex.test(log);
-    } catch (error) {
-        console.error(
-            "Invalid regex signature:",
-            signature.value,
-            error
-        );
-
+function matchesSignature(log, signature) {
+    if (!signature || !signature.type) {
         return false;
     }
-}
 
-return false;
-```
+
+    if (signature.type === "text") {
+        return log.toLowerCase().includes(
+            String(signature.value).toLowerCase()
+        );
+    }
+
+    if (signature.type === "regex") {
+        try {
+            const regex = new RegExp(signature.value, "i");
+            return regex.test(log);
+        } catch (error) {
+            console.error(
+                "Invalid regex signature:",
+                signature.value,
+                error
+            );
+
+            return false;
+        }
+    }
+
+    return false;
+
 
 }
 
@@ -116,23 +109,23 @@ Analyzer
 ========================================================= */
 
 function analyzeLog(log) {
-const normalizedLog = log.trim();
+    const normalizedLog = log.trim();
 
-```
-if (!normalizedLog) {
-    return null;
-}
 
-for (const error of errors) {
-    for (const signature of error.signatures || []) {
-        if (matchesSignature(normalizedLog, signature)) {
-            return error;
+    if (!normalizedLog) {
+        return null;
+    }
+
+    for (const error of errors) {
+        for (const signature of error.signatures || []) {
+            if (matchesSignature(normalizedLog, signature)) {
+                return error;
+            }
         }
     }
-}
 
-return null;
-```
+    return null;
+
 
 }
 
@@ -141,50 +134,50 @@ Result rendering
 ========================================================= */
 
 function renderList(element, items = []) {
-element.replaceChildren();
+    element.replaceChildren();
 
-```
-for (const item of items) {
-    const li = document.createElement("li");
-    li.textContent = item;
-    element.appendChild(li);
-}
-```
+
+    for (const item of items) {
+        const li = document.createElement("li");
+        li.textContent = item;
+        element.appendChild(li);
+    }
+
 
 }
 
 function showResult(error) {
-resultTitle.textContent = error.name;
-resultSeverity.textContent = error.severity;
-resultComponent.textContent = error.component;
-resultCategory.textContent = error.category;
-resultDescription.textContent = error.description;
+    resultTitle.textContent = error.name;
+    resultSeverity.textContent = error.severity;
+    resultComponent.textContent = error.component;
+    resultCategory.textContent = error.category;
+    resultDescription.textContent = error.description;
 
-```
-renderList(resultCauses, error.causes);
-renderList(resultChecks, error.checks);
 
-result.hidden = false;
-noResult.hidden = true;
+    renderList(resultCauses, error.causes);
+    renderList(resultChecks, error.checks);
 
-result.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-});
-```
+    result.hidden = false;
+    noResult.hidden = true;
+
+    result.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
 
 }
 
 function showNoResult() {
-result.hidden = true;
-noResult.hidden = false;
+    result.hidden = true;
+    noResult.hidden = false;
 
-```
-noResult.scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-});
-```
+
+    noResult.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
 
 }
 
@@ -193,12 +186,12 @@ Character counter
 ========================================================= */
 
 function updateCharacterCount() {
-const count = logInput.value.length;
+    const count = logInput.value.length;
 
-```
-characterCount.textContent =
-    `${count.toLocaleString()} character${count === 1 ? "" : "s"}`;
-```
+
+    characterCount.textContent =
+        `${count.toLocaleString()} character${count === 1 ? "" : "s"}`;
+
 
 }
 
@@ -209,15 +202,15 @@ Analyze button
 ========================================================= */
 
 analyzeButton.addEventListener("click", () => {
-const error = analyzeLog(logInput.value);
+    const error = analyzeLog(logInput.value);
 
-```
-if (error) {
-    showResult(error);
-} else {
-    showNoResult();
-}
-```
+
+    if (error) {
+        showResult(error);
+    } else {
+        showNoResult();
+    }
+
 
 });
 
@@ -226,16 +219,16 @@ Clear button
 ========================================================= */
 
 clearButton.addEventListener("click", () => {
-logInput.value = "";
+    logInput.value = "";
 
-```
-updateCharacterCount();
 
-result.hidden = true;
-noResult.hidden = true;
+    updateCharacterCount();
 
-logInput.focus();
-```
+    result.hidden = true;
+    noResult.hidden = true;
+
+    logInput.focus();
+
 
 });
 
@@ -244,17 +237,17 @@ Keyboard shortcuts
 ========================================================= */
 
 logInput.addEventListener("keydown", (event) => {
-/*
-* Ctrl + Enter / Cmd + Enter
-* Analyze the current log.
-*/
-if (
-event.key === "Enter" &&
-(event.ctrlKey || event.metaKey)
-) {
-event.preventDefault();
-analyzeButton.click();
-}
+    /*
+     * Ctrl + Enter / Cmd + Enter
+     * Analyze the current log.
+     */
+    if (
+        event.key === "Enter" &&
+        (event.ctrlKey || event.metaKey)
+    ) {
+        event.preventDefault();
+        analyzeButton.click();
+    }
 });
 
 /* =========================================================
